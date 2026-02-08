@@ -1,0 +1,133 @@
+# Install: pip install backboard-sdk
+import asyncio
+from backboard import BackboardClient
+from dotenv import load_dotenv
+
+load_dotenv()
+
+async def main():
+    # Initialize the Backboard client
+    client = BackboardClient(api_key="espr_bF3RJTj4oatawA6x4llG6HutCozuridek_TGxFY6z7Q")
+
+    # Create an assistant
+    assistant = await client.create_assistant(
+        name="My First Assistant",
+        system_prompt="An assistant that decides the kind of loan repayment strategy based on user payment behaviour"
+    )
+
+    # Create a thread
+    thread = await client.create_thread(assistant.assistant_id)
+
+    # Send a message and get the complete response
+    response = await client.add_message(
+        thread_id=thread.thread_id,
+        content="The user does not pay his EMI on time and always pays late with fines and still has unpaid EMI for past 2 months",
+        llm_provider="google",
+        model_name="gemini-2.5-flash-preview-09-2025",
+        stream=False
+    )
+
+    # Print the AI's response
+    print(response.content)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+this is the basic agent architecture i've made right now. I want you to help scale this agent system. i am backboard ai. scrape its web to understadn its documentation. 
+
+this is the agent system i was thinking
+
+- decisive-agent : based on the i/p schema from above, it will decide strategy to implement loan repayment (has to very precise with exact input needed for the next agent)
+- actor-agent : based on the o/p from decisive model, which contains the exact data inputs to choose intensity of repayment methods (eg number of calls per week, no of reminder mails, tone of warning messages etc etc)
+- refinement-agent : this agent is monitoring the user reaction to the action, such as messages open time, and based on that refien the actor agent's next actions.
+
+now as you can see i am not clear on the exact i/p and o/p of each agent. can you help me fix down on them
+
+
+daysSinceLastPayment =
+  last_pymnt_d ? (today - last_pymnt_d) / DAY : Infinity;
+expectedPaymentRatio =
+  total_pymnt / expected_payment_till_date;
+avgFico =
+  (fico_range_low + fico_range_high) / 2;
+emiToIncomeRatio =
+  (installment * 12) / annual_inc;
+
+
+Rule 1: WILFUL_DEFAULTER (highest severity)
+IF (
+  annual_inc >= HIGH_INCOME_THRESHOLD &&
+  dti < 25 &&
+  loan_status IN ['Default', 'Charged Off'] &&
+  daysSinceLastPayment > 90
+)
+→ persona = WILFUL_DEFAULTER
+
+
+Rule 2: HIGH_RISK_DEFAULT
+IF (
+  avgFico < 620 &&
+  grade IN ['E', 'F', 'G'] &&
+  revol_util >= 80 &&
+  loan_status == 'Late (31-120 days)'
+)
+→ persona = HIGH_RISK_DEFAULT
+
+Rule 3: CHRONIC_DELAYED
+IF (
+  loan_status == 'Late (31-120 days)' &&
+  delinq_2yrs >= 2 &&
+  expectedPaymentRatio < 0.5
+)
+→ persona = CHRONIC_DELAYED
+
+Rule 4: TEMPORARY_STRESSED
+IF (
+  loan_status IN ['Late (16-30 days)', 'In Grace Period'] &&
+  dti >= 35 &&
+  inq_last_6mths >= 2
+)
+→ persona = TEMPORARY_STRESSED
+
+Rule 5: RECOVERY_CANDIDATE
+IF (
+  recoveries > 0 &&
+  last_pymnt_amnt > 0 &&
+  loan_status IN ['Late (16-30 days)', 'Late (31-120 days)', 'Default']
+)
+→ persona = RECOVERY_CANDIDATE
+
+Rule 6: LOW_RISK_RESPONSIVE (fallback)
+IF (
+  loan_status IN ['Current', 'In Grace Period'] &&
+  avgFico >= 680 &&
+  delinq_2yrs == 0 &&
+  daysSinceLastPayment <= 30
+)
+→ persona = LOW_RISK_RESPONSIVE
+
+o/p schema
+
+{
+  "loan_id": "LN12345",
+  "repayment_persona": "TEMPORARY_STRESSED",
+  "confidence": 0.86,
+  "triggered_rules": [
+    "DTI_HIGH",
+    "RECENT_INQUIRIES",
+    "SHORT_TERM_DELAY"
+  ],
+  "recommended_strategies": [
+    "WHATSAPP_ASSISTANT",
+    "PARTIAL_PAYMENT_OFFER"
+  ],
+  "max_intensity_level": 2
+}
+Mapping Persona → Strategy (hard rule)
+Persona	Max Intensity	Allowed Methods
+LOW_RISK_RESPONSIVE	1	SMS, WhatsApp
+TEMPORARY_STRESSED	2	WhatsApp, Micro-payment
+RECOVERY_CANDIDATE	2	Incentives, Partial
+CHRONIC_DELAYED	3	Calls, Agent
+HIGH_RISK_DEFAULT	4	Agent, Notice
+WILFUL_DEFAULTER	5	Legal Pre-Alert
