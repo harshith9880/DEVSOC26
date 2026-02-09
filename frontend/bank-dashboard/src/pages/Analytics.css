@@ -1,0 +1,108 @@
+.analytics-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.analytics-header {
+  margin-bottom: 2.5rem;
+}
+
+.analytics-header h1 {
+  font-size: 1.75rem;
+  color: #111827;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.analytics-header p {
+  color: #6b7280;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.analytics-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.analytics-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.card-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.icon-blue { background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #2563eb; }
+.icon-green { background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #059669; }
+.icon-orange { background: linear-gradient(135deg, #fed7aa, #fdba74); color: #d97706; }
+.icon-red { background: linear-gradient(135deg, #fecaca, #fca5a5); color: #dc2626; }
+
+.analytics-card h3 {
+  font-size: 1.125rem;
+  color: #111827;
+  margin: 0 0 0.75rem 0;
+  font-weight: 600;
+}
+
+.analytics-card p {
+  color: #6b7280;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+}
+
+.btn-analytics {
+  width: 100%;
+  padding: 0.75rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-analytics:hover {
+  background: #2563eb;
+}
+
+.development-notice {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.development-notice p {
+  color: #6b7280;
+  font-size: 1.0625rem;
+  margin: 0;
+}
+
+.loading {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.125rem;
+  color: #6b7280;
+}

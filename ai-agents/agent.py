@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime
 from typing import Dict, List, Optional
 from mcp_client import MCPClient
-from message_generator import MessageGenerator
+from message_generator import MessageGenerator  # Uses Gemini now
 from config import AGENT_NAME, AI_MODEL
 
 logging.basicConfig(
@@ -17,13 +17,13 @@ logger = logging.getLogger(__name__)
 
 
 class CollectionAgent:
-    """AI Agent for intelligent loan collection"""
+    """AI Agent for intelligent loan collection using Google Gemini"""
     
     def __init__(self):
         self.mcp_client = MCPClient()
-        self.message_generator = MessageGenerator(model=AI_MODEL)
+        self.message_generator = MessageGenerator(model=AI_MODEL)  # Now uses Gemini
         self.agent_name = AGENT_NAME
-        logger.info(f"🤖 {self.agent_name} initialized with {AI_MODEL}")
+        logger.info(f"🤖 {self.agent_name} initialized with Google {AI_MODEL}")
     
     def process_single_customer(self, loan_id: str, 
                                use_ai_generation: bool = True,
@@ -222,11 +222,11 @@ def main():
     agent = CollectionAgent()
     
     # Check health
-    if not agent.mcp_client.health_check():
-        logger.error("❌ Backend not reachable! Start the backend server first.")
-        return
+    #if not agent.mcp_client.health_check():
+    #    logger.error("❌ Backend not reachable! Start the backend server first.")
+   #     return
     
-    logger.info("✅ Backend connection successful\n")
+   # logger.info("✅ Backend connection successful\n")
     
     # Get system stats
     agent.get_system_stats()

@@ -1,0 +1,98 @@
+.message-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+  padding-left: 2rem;
+}
+
+.message-timeline::before {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #e5e7eb;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 1rem;
+  position: relative;
+}
+
+.timeline-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.timeline-content {
+  flex: 1;
+  background: white;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.timeline-channel {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.timeline-time {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.timeline-message {
+  color: #374151;
+  line-height: 1.6;
+  margin: 0 0 0.75rem 0;
+}
+
+.timeline-status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+
+.status-opened {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-responded {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.timeline-empty {
+  text-align: center;
+  padding: 3rem;
+  color: #9ca3af;
+}
+
+.timeline-empty p {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+}
