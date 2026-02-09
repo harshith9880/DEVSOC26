@@ -1,0 +1,103 @@
+.metric-card {
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-lg);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.metric-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+}
+
+.metric-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.metric-card-icon .icon {
+  width: 24px;
+  height: 24px;
+}
+
+.metric-card-icon-blue {
+  background-color: #dbeafe;
+  color: var(--primary);
+}
+
+.metric-card-icon-green {
+  background-color: var(--success-light);
+  color: var(--success);
+}
+
+.metric-card-icon-red {
+  background-color: var(--danger-light);
+  color: var(--danger);
+}
+
+.metric-card-icon-orange {
+  background-color: var(--warning-light);
+  color: var(--warning);
+}
+
+.metric-card-icon-purple {
+  background-color: var(--info-light);
+  color: var(--info);
+}
+
+.metric-card-content {
+  flex: 1;
+}
+
+.metric-card-title {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+  font-weight: 500;
+}
+
+.metric-card-value {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.metric-card-trend {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.metric-card-trend-up {
+  color: var(--success);
+}
+
+.metric-card-trend-down {
+  color: var(--danger);
+}
+
+.trend-icon {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 768px) {
+  .metric-card-value {
+    font-size: var(--font-size-2xl);
+  }
+}

@@ -1,0 +1,35 @@
+.analytics-chart {
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-lg);
+}
+
+.analytics-chart-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.analytics-chart-container {
+  width: 100%;
+}
+
+/* Recharts custom styles */
+.recharts-text {
+  fill: var(--text-secondary);
+}
+
+.recharts-cartesian-axis-tick-value {
+  font-size: var(--font-size-xs);
+}
+
+.recharts-legend-item-text {
+  color: var(--text-primary) !important;
+  font-size: var(--font-size-sm);
+}
+
+.recharts-tooltip-wrapper {
+  outline: none;
+}

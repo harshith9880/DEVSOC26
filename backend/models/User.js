@@ -161,9 +161,149 @@ const loanSchema = new Schema({
     }
   },
 
+  contactProfile: {
+    contactChannels: {
+      type: [String],
+      enum: ["email", "sms", "whatsapp", "call"],
+      required: true,
+      default: []
+    },
+
+    lastContactAt: {
+      type: Date
+    },
+
+    lastResponseAt: {
+      type: Date
+    },
+
+    responseRate: {
+      type: Number,
+      min: 0,
+      max: 1,
+      default: 0
+    },
+
+    delayTimeMs: {
+      type: Number,
+      min: 0,
+      default: 0
+    },
+
+    loanAmountLeft: {
+      type: Number,
+      min: 0,
+      required: true
+    },
+
+    tone: {
+      type: String,
+      enum: ["informational", "empathetic", "supportive", "urgent"],
+      default: "informational"
+    },
+
+    currentContactFreq: {
+      type: Number,
+      min: 0,
+      default: 0
+    },
+
+    contactTimeRange: {
+      start: {
+        type: Date,
+        required: true
+      },
+      end: {
+        type: Date,
+        required: true
+      }
+    }
+  },
+
+  FeedbackOutput: {
+    loan_id: {
+      type: String,
+      required: true,
+      index: true
+    },
+
+    repayment_persona: {
+      type: String,
+      enum: [
+        "LOW_RISK_RESPONSIVE",
+        "TEMPORARY_STRESSED",
+        "CHRONIC_DELAYED",
+        "HIGH_RISK_DEFAULT",
+        "WILFUL_DEFAULTER",
+        "RECOVERY_CANDIDATE"
+      ],
+      required: true
+    },
+
+    confidence: {
+      type: Number,
+      min: 0,
+      max: 1,
+      required: true
+    },
+
+    triggered_rules: {
+      type: [String],
+      default: []
+    },
+
+    recommended_strategies: {
+      type: [String],
+      enum: [
+        "EMAIL",
+        "SMS",
+        "WHATSAPP",
+        "CALL",
+        "HUMAN_ESCALATION"
+      ],
+      default: []
+    },
+
+    max_intensity_level: {
+      type: Number,
+      min: 0,
+      max: 4,
+      required: true
+    }
+  }
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
+
+// Add interaction history for observation layer
+loanSchema.add({
+  interactionHistory: [{
+    channel: {
+      type: String,
+      enum: ["email", "sms", "whatsapp", "call"]
+    },
+    sentAt: Date,
+    deliveredAt: Date,
+    openedAt: Date,
+    clickedAt: Date,
+    respondedAt: Date,
+    tone: String,
+    status: {
+      type: String,
+      enum: ["sent", "delivered", "opened", "clicked", "responded", "failed"]
+    }
+  }]
+});
+
+// Add customer contact info (needed for simulation)
+loanSchema.add({
+  customer_contact: {
+    email: String,
+    phone: String,
+    name: String
+  }
+});
+
 
 // Compound indexes for common queries
 loanSchema.index({ 'loan_details.grade': 1, 'repayment.loan_status': 1 });

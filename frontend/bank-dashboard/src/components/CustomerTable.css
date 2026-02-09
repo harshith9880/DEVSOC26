@@ -1,0 +1,140 @@
+.customer-table-container {
+  overflow-x: auto;
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.customer-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.customer-table thead {
+  background-color: var(--bg-tertiary);
+}
+
+.customer-table th {
+  padding: var(--spacing-md);
+  text-align: left;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.customer-table td {
+  padding: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.customer-table tbody tr:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.customer-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.customer-loan-id {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.customer-name {
+  font-weight: 500;
+}
+
+.customer-amount {
+  font-weight: 600;
+}
+
+.response-rate {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.response-rate-bar {
+  flex: 1;
+  height: 8px;
+  background-color: var(--bg-tertiary);
+  border-radius: 9999px;
+  overflow: hidden;
+  max-width: 100px;
+}
+
+.response-rate-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--danger), var(--warning), var(--success));
+  border-radius: 9999px;
+  transition: width 0.3s;
+}
+
+.response-rate-text {
+  font-weight: 500;
+  min-width: 40px;
+}
+
+.customer-last-contact {
+  color: var(--text-secondary);
+}
+
+.customer-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.action-btn {
+  padding: var(--spacing-sm);
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
+  transform: scale(1.1);
+}
+
+.action-btn-view {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.action-btn-view:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+.action-btn-send {
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.action-btn-send:hover {
+  background-color: var(--success);
+  color: white;
+}
+
+.action-icon {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 768px) {
+  .customer-table {
+    font-size: var(--font-size-xs);
+  }
+  
+  .response-rate-bar {
+    max-width: 60px;
+  }
+}
