@@ -14,4 +14,9 @@ router.get('/feedback/:loan_id', intelligenceController.getLatestFeedback);
 // Get feedback history
 router.get('/feedback/:loan_id/history', intelligenceController.getFeedbackHistory);
 
+
+router.get('/channel-performance', intelligenceController.getChannelPerformance);
+router.get('/feedback/stats', intelligenceController.getMessageStats);
+
+
 module.exports = router;

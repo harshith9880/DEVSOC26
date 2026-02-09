@@ -162,3 +162,41 @@ exports.getFeedbackHistory = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+// Channel performance
+exports.getChannelPerformance = async (req, res) => {
+  try {
+    const stats = await FeedbackHistory.aggregate([
+      {
+        $group: {
+          _id: '$channel',
+          count: { $sum: 1 },
+          opened: { $sum: { $cond: ['$openedAt', 1, 0] } },
+          responded: { $sum: { $cond: ['$respondedAt', 1, 0] } }
+        }
+      }
+    ]);
+    
+    res.json({ success: true, stats });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// Message stats
+exports.getMessageStats = async (req, res) => {
+  try {
+    const total = await FeedbackHistory.countDocuments();
+    const sent = await FeedbackHistory.countDocuments({ openedAt: null });
+    const opened = await FeedbackHistory.countDocuments({ 
+      openedAt: { $ne: null }, 
+      respondedAt: null 
+    });
+    const responded = await FeedbackHistory.countDocuments({ respondedAt: { $ne: null } });
+    
+    res.json({ success: true, stats: { total, sent, opened, responded } });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};

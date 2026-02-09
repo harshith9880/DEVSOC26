@@ -10,6 +10,7 @@ const smsWebhook = require('./routes/webhooks/sms.webhook');
 const callWebhook = require('./routes/webhooks/call.webhook');
 const simulationRoutes = require('./routes/simulation.routes');
 const testRoutes = require('./routes/test.routes');
+const mcpRoutes = require('./routes/mcp.routes');
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use('/api/webhooks/email', emailWebhook);
 app.use('/api/webhooks/whatsapp', whatsappWebhook);
 app.use('/api/webhooks/sms', smsWebhook);
 app.use('/api/webhooks/call', callWebhook);
+app.use('/api/mcp', mcpRoutes);
 
 // Intelligence routes
 app.use('/api/intelligence', intelligenceRoutes);
