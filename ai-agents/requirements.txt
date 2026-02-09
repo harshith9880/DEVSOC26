@@ -1,0 +1,22 @@
+# LLM & AI
+openai==1.12.0
+anthropic==0.18.1
+
+# HTTP & API
+requests==2.31.0
+httpx==0.26.0
+
+# Event Bus
+redis==5.0.1
+
+# Scheduling (fallback only)
+schedule==1.2.0
+APScheduler==3.10.4
+
+# Data & Utilities
+python-dotenv==1.0.0
+pydantic==2.6.0
+tenacity==8.2.3
+
+# Logging & Monitoring
+structlog==24.1.0

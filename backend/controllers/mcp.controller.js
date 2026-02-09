@@ -722,3 +722,4 @@ exports.triggerCollection = async (req, res) => {
 
 
 module.exports = new MCPController();
+  mcp.controller.js
