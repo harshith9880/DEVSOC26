@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Search, Filter, Download, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './Customers.css';
+
+const API_BASE_URL = 'http://localhost:5000/api';
 
 const Customers = () => {
   const navigate = useNavigate();
@@ -16,67 +19,24 @@ const Customers = () => {
     console.log('✅ Customers loaded');
   }, []);
 
-  const fetchCustomers = () => {
-    // Mock data
-    const mockCustomers = [
-      {
-        loan_id: 'LN001',
-        customer_name: 'Rajesh Kumar',
-        email: 'rajesh.k@email.com',
-        phone_number: '+91 98765 43210',
-        outstanding_amount: 125000,
-        response_rate: 85,
-        persona: 'HIGH_RISK_AGGRESSIVE_DEFAULTER'
-      },
-      {
-        loan_id: 'LN002',
-        customer_name: 'Priya Sharma',
-        email: 'priya.sharma@email.com',
-        phone_number: '+91 98234 56789',
-        outstanding_amount: 85000,
-        response_rate: 92,
-        persona: 'LOW_RISK_COOPERATIVE_BORROWER'
-      },
-      {
-        loan_id: 'LN003',
-        customer_name: 'Amit Patel',
-        email: 'amit.patel@email.com',
-        phone_number: '+91 97654 32109',
-        outstanding_amount: 250000,
-        response_rate: 45,
-        persona: 'HIGH_RISK_EVASIVE_DEBTOR'
-      },
-      {
-        loan_id: 'LN004',
-        customer_name: 'Sneha Reddy',
-        email: 'sneha.reddy@email.com',
-        phone_number: '+91 99876 54321',
-        outstanding_amount: 65000,
-        response_rate: 78,
-        persona: 'MEDIUM_RISK_INCONSISTENT_PAYER'
-      },
-      {
-        loan_id: 'LN005',
-        customer_name: 'Vikram Singh',
-        email: 'vikram.singh@email.com',
-        phone_number: '+91 98123 45678',
-        outstanding_amount: 195000,
-        response_rate: 55,
-        persona: 'HIGH_RISK_FINANCIAL_DISTRESSED'
-      },
-      {
-        loan_id: 'LN006',
-        customer_name: 'Anita Desai',
-        email: 'anita.desai@email.com',
-        phone_number: '+91 97234 56780',
-        outstanding_amount: 45000,
-        response_rate: 95,
-        persona: 'LOW_RISK_TIMELY_BORROWER'
+  const fetchCustomers = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API_BASE_URL}/customers`);
+      console.log('✅ Fetched customers:', response.data);
+      
+      if (response.data.success && response.data.customers) {
+        setCustomers(response.data.customers);
+      } else {
+        console.error('❌ Invalid response format:', response.data);
+        setCustomers([]);
       }
-    ];
-
-    setCustomers(mockCustomers);
-    setLoading(false);
+    } catch (error) {
+      console.error('❌ Failed to fetch customers:', error.message);
+      setCustomers([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getRiskStatus = (persona) => {
@@ -137,6 +97,32 @@ const Customers = () => {
     navigate(`/customers/${loanId}`);
   };
 
+  const handleExport = () => {
+    // Export customers data as CSV
+    const headers = ['Loan ID', 'Customer Name', 'Email', 'Phone', 'Outstanding', 'Response Rate', 'Risk Status'];
+    const csvData = filteredCustomers.map(c => [
+      c.loan_id,
+      c.customer_name,
+      c.email,
+      c.phone_number,
+      c.outstanding_amount,
+      c.response_rate || 0,
+      getRiskStatus(c.persona)
+    ]);
+
+    const csv = [
+      headers.join(','),
+      ...csvData.map(row => row.join(','))
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `customers_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+  };
+
   const filteredCustomers = getFilteredCustomers();
 
   if (loading) {
@@ -147,7 +133,7 @@ const Customers = () => {
     <div className="customers-page">
       <div className="customers-header">
         <h1>Customer Management</h1>
-        <button className="btn-export">
+        <button className="btn-export" onClick={handleExport}>
           <Download size={18} />
           Export Data
         </button>
@@ -197,7 +183,7 @@ const Customers = () => {
             {filteredCustomers.length === 0 ? (
               <tr>
                 <td colSpan="7" style={{ textAlign: 'center', padding: '3rem' }}>
-                  No customers found
+                  {customers.length === 0 ? 'No customers in database' : 'No customers found matching filters'}
                 </td>
               </tr>
             ) : (
@@ -206,17 +192,19 @@ const Customers = () => {
                   <td className="loan-id">{customer.loan_id}</td>
                   <td className="customer-name">{customer.customer_name}</td>
                   <td className="contact-info">
-                    <div>{customer.email}</div>
-                    <div className="phone">{customer.phone_number}</div>
+                    <div>{customer.email || 'N/A'}</div>
+                    <div className="phone">{customer.phone_number || 'N/A'}</div>
                   </td>
-                  <td className="outstanding">{formatCurrency(customer.outstanding_amount)}</td>
+                  <td className="outstanding">
+                    {formatCurrency(customer.outstanding_amount || 0)}
+                  </td>
                   <td>
                     <div className="response-rate" 
                          style={{ 
-                           background: customer.response_rate > 70 ? '#d1fae5' : '#fee2e2',
-                           color: customer.response_rate > 70 ? '#047857' : '#991b1b'
+                           background: (customer.response_rate || 0) > 70 ? '#d1fae5' : '#fee2e2',
+                           color: (customer.response_rate || 0) > 70 ? '#047857' : '#991b1b'
                          }}>
-                      {customer.response_rate}%
+                      {customer.response_rate || 0}%
                     </div>
                   </td>
                   <td>
@@ -225,7 +213,7 @@ const Customers = () => {
                             background: `${getRiskColor(customer.persona)}20`,
                             color: getRiskColor(customer.persona)
                           }}>
-                      {getRiskStatus(customer.persona).replace('_', ' ')}
+                      {getRiskStatus(customer.persona).replace(/_/g, ' ')}
                     </span>
                   </td>
                   <td>

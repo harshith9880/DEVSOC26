@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Users, DollarSign, TrendingUp, MessageSquare, AlertCircle } from 'lucide-react';
 import './Dashboard.css';
+
+const API_BASE_URL = 'http://localhost:5000/api';
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -11,46 +14,57 @@ const Dashboard = () => {
   });
 
   const [recentActivity, setRecentActivity] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     console.log('📦 Loading Dashboard...');
-    // Mock data since backend is unavailable
-    setStats({
-      totalCustomers: 156,
-      totalOutstanding: 2450000,
-      collectionRate: 78.5,
-      messagesSent: 1243
-    });
-
-    setRecentActivity([
-      {
-        id: 1,
-        type: 'payment',
-        message: 'Rajesh Kumar made payment of ₹5,000',
-        time: '2 minutes ago'
-      },
-      {
-        id: 2,
-        type: 'message',
-        message: 'WhatsApp sent to Priya Sharma',
-        time: '15 minutes ago'
-      },
-      {
-        id: 3,
-        type: 'alert',
-        message: 'High-risk customer detected: Amit Patel',
-        time: '1 hour ago'
-      },
-      {
-        id: 4,
-        type: 'payment',
-        message: 'Sneha Reddy made payment of ₹12,500',
-        time: '2 hours ago'
-      }
-    ]);
-
+    fetchDashboardData();
     console.log('✅ Dashboard loaded');
   }, []);
+
+  const fetchDashboardData = async () => {
+    setLoading(true);
+    try {
+      // Fetch customers for stats
+      const customersResponse = await axios.get(`${API_BASE_URL}/customers`);
+      
+      if (customersResponse.data.success && customersResponse.data.customers) {
+        const customers = customersResponse.data.customers;
+        
+        // Calculate stats
+        const totalCustomers = customers.length;
+        const totalOutstanding = customers.reduce((sum, c) => sum + (c.outstanding_amount || 0), 0);
+        const avgResponseRate = customers.reduce((sum, c) => sum + (c.response_rate || 0), 0) / totalCustomers;
+        
+        setStats({
+          totalCustomers,
+          totalOutstanding,
+          collectionRate: avgResponseRate.toFixed(1),
+          messagesSent: totalCustomers * 8 // Approximate
+        });
+      }
+
+      // Set some recent activity (can be replaced with real API later)
+      setRecentActivity([
+        {
+          id: 1,
+          type: 'payment',
+          message: 'Customer made payment',
+          time: '2 minutes ago'
+        },
+        {
+          id: 2,
+          type: 'message',
+          message: 'WhatsApp campaign sent',
+          time: '15 minutes ago'
+        }
+      ]);
+    } catch (error) {
+      console.error('❌ Failed to fetch dashboard data:', error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -59,6 +73,10 @@ const Dashboard = () => {
       maximumFractionDigits: 0
     }).format(amount);
   };
+
+  if (loading) {
+    return <div className="loading">Loading dashboard...</div>;
+  }
 
   return (
     <div className="dashboard">
